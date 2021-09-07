@@ -5,7 +5,7 @@ import {Counter} from "./Components/Counter/Counter";
 import {Settings} from "./Components/Settings/Settings";
 
 function App() {
-  let [maxValue, setMaxValue] = useState(2);
+  let [maxValue, setMaxValue] = useState(5);
   let [value, setValue] = useState<number>(0);
   let [error, setError] = useState(false);
   useEffect(() => {
