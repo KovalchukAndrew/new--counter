@@ -4,7 +4,7 @@ export type ButtonPropsType = {
 
     title: string
     callBack: () => void
-    error?: boolean
+    disabled?: boolean
 }
 
 export const Button = (props: ButtonPropsType) => {
@@ -13,8 +13,8 @@ export const Button = (props: ButtonPropsType) => {
     }
     return <div>
         <button
-            className={props.error? "disabled" :"button"}
-            disabled={props.error && props.title==="Inc"}
+            className={props.disabled ? "disabled" : "button"}
+            disabled={props.disabled}
             onClick={useButton}
         >{props.title}</button>
     </div>

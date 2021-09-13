@@ -5,62 +5,48 @@ import {Counter} from "./Components/Counter/Counter";
 import {Settings} from "./Components/Settings/Settings";
 
 function App() {
-  let [maxValue, setMaxValue] = useState(5);
-  let [value, setValue] = useState<number>(0);
-  let [error, setError] = useState(false);
-  useEffect(() => {
-    let valueAsString = localStorage.getItem('counterValue')
-    let maxValueAsString = localStorage.getItem('setMax')
-    /*let newError = localStorage.getItem('error')*/
+  let [maxValue, setMaxValue] = useState(parseInt(localStorage.getItem('setMax') || '5'));
+  let [valueToIncrement, setValueToIncrement] = useState<number>(parseInt(localStorage.getItem('counterValue') || '0'));
+  let [isSettingsInvalid, setIsSettingsInvalid] = useState(false);
 
-    if (valueAsString && maxValueAsString) {
-      let newValue = JSON.parse(valueAsString)
-      let newMax = JSON.parse(maxValueAsString)
-      setValue(newValue)
-      setMaxValue(newMax)
-      if (newValue >= newMax)
-        setError(true)
-    }
-
-  }, [])
-  useEffect(() => {
-    localStorage.setItem('error', JSON.stringify(error))
-    localStorage.setItem('counterValue', JSON.stringify(value))
-    localStorage.setItem('setMax', JSON.stringify(maxValue))
-
-  })
   const incValue = () => {
-    setValue(value + 1)
-    if (value>=maxValue-1) {
-      setError(true)
-    }
+    const newValueToIncrement = valueToIncrement + 1;
+    setValueToIncrement(newValueToIncrement)
   }
+
   const resetCounter = () => {
-    setValue(value = 0)
-
-    value>=maxValue ? setError(true): setError(false)
-
+    setValueToIncrement(parseInt(localStorage.getItem('counterValue') || '0'))
   }
-  const getValues = (newStart:number, newMaxValue:number) => {
-    setValue(newStart)
+
+  const setNewValues = (newStartValue: number, newMaxValue: number) => {
+    setValueToIncrement(newStartValue)
     setMaxValue(newMaxValue)
-    newStart>=newMaxValue-1?setError(true):setError(false)
-
-
+    setLocalStorage(newStartValue, newMaxValue);
   }
+
+  const updateIsSettingsInvalid = (isSettingsInvalid: boolean) => {
+    setIsSettingsInvalid(isSettingsInvalid)
+  }
+
+  function setLocalStorage(newCounterValue: number, newMaxValue: number) {
+    localStorage.setItem('counterValue', JSON.stringify(newCounterValue))
+    localStorage.setItem('setMax', JSON.stringify(newMaxValue))
+  }
+
   return (
       <div className="App">
         <Counter
-            value={value}
+            valueToIncrement={valueToIncrement}
             maxValue={maxValue}
-            error={error}
+            isSettingsInvalid={isSettingsInvalid}
             incValue={incValue}
             resetCounter={resetCounter}
         />
         <Settings
             maxValue={maxValue}
-            value={value}
-            getValues={getValues}
+            valueToIncrement={valueToIncrement}
+            setNewValuesCallback={setNewValues}
+            setIsSettingsInvalidCallback={updateIsSettingsInvalid}
         />
       </div>
   );
