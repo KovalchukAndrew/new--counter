@@ -10,7 +10,7 @@ export type CounterPropsType = {
     isSettingsInvalid: boolean
     incValue: () => void
     resetCounter: () => void
-    /*counterToSettings: () => void*/
+    counterToSettings: () => void
 }
 
 export const Counter = (props:CounterPropsType) => {
@@ -38,8 +38,8 @@ export const Counter = (props:CounterPropsType) => {
                 callBack={props.resetCounter}
                 title={"Reset"}
             />
-            {/*<Button title={"Settings"} callBack={props.counterToSettings}
-            />*/}
+            <Button title={"Settings"} callBack={props.counterToSettings}
+            />
         </div>
     </div>
 }

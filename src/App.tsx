@@ -8,7 +8,7 @@ function App() {
   let [maxValue, setMaxValue] = useState(parseInt(localStorage.getItem('setMax') || '5'));
   let [valueToIncrement, setValueToIncrement] = useState<number>(parseInt(localStorage.getItem('counterValue') || '0'));
   let [isSettingsInvalid, setIsSettingsInvalid] = useState(false);
-  let [x, setX] = useState<boolean>(true)
+  let [counterToSettings, setCounterToSettings] = useState<boolean>(true)
 
   const incValue = () => {
     const newValueToIncrement = valueToIncrement + 1;
@@ -20,7 +20,7 @@ function App() {
   }
 
   const setNewValues = (newStartValue: number, newMaxValue: number) => {
-    setX(true)
+    setCounterToSettings(true)
     setValueToIncrement(newStartValue)
     setMaxValue(newMaxValue)
     setLocalStorage(newStartValue, newMaxValue);
@@ -35,27 +35,27 @@ function App() {
     localStorage.setItem('counterValue', JSON.stringify(newCounterValue))
     localStorage.setItem('setMax', JSON.stringify(newMaxValue))
   }
- /* function changeCounterToSettings() {
-    setX(false);
-  }*/
+  function changeCounterToSettings() {
+    setCounterToSettings(false);
+  }
 
   return (
       <div className="App">
-        <Counter
+        {counterToSettings && <Counter
             valueToIncrement={valueToIncrement}
             maxValue={maxValue}
             isSettingsInvalid={isSettingsInvalid}
             incValue={incValue}
             resetCounter={resetCounter}
-            /*counterToSettings={changeCounterToSettings}*/
-        />
-        <Settings
+            counterToSettings={changeCounterToSettings}
+        />}
+        {!counterToSettings && <Settings
             maxValue={maxValue}
             valueToIncrement={valueToIncrement}
             setNewValuesCallback={setNewValues}
             setIsSettingsInvalidCallback={updateIsSettingsInvalid}
 
-        />
+        />}
       </div>
   );
 }

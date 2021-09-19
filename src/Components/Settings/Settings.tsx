@@ -9,7 +9,7 @@ export type SettingsPropsType = {
     setIsSettingsInvalidCallback: (isSettingsInvalid: boolean) => void
 }
 export const Settings = (props:SettingsPropsType) => {
-    let [startValue, setStartValue] = useState<number>(props.valueToIncrement)
+    let [startValue, setStartValue] = useState<number>(Number(localStorage.getItem('counterValue')) || 0)
     let [maxValue, setMaxValue] = useState<number>(props.maxValue)
     let [isSetButtonDisabled, setIsSetButtonDisabled] = useState<boolean>(props.valueToIncrement >= props.maxValue)
 
