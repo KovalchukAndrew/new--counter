@@ -1,25 +1,40 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import '../../App.css';
 import {Button} from "../Counter/Button";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "../../Redux/Store";
+import {SetCounterAC, SetCounterToSettingsAC, SetMaxAC, SetStartAC} from "../../Redux/Reducer";
 
 export type SettingsPropsType = {
-    maxValue: number
-    valueToIncrement: number
-    setNewValuesCallback: (newStartValue: number, newMaxValue: number) => void
+    //maxValue: number
+    //valueToIncrement: number
+    //setNewValuesCallback: (newStartValue: number, newMaxValue: number) => void
     setIsSettingsInvalidCallback: (isSettingsInvalid: boolean) => void
 }
 export const Settings = (props:SettingsPropsType) => {
-    let [startValue, setStartValue] = useState<number>(Number(localStorage.getItem('counterValue')) || 0)
-    let [maxValue, setMaxValue] = useState<number>(props.maxValue)
-    let [isSetButtonDisabled, setIsSetButtonDisabled] = useState<boolean>(props.valueToIncrement >= props.maxValue)
+    let startValue = useSelector<AppRootStateType, number> (state => state.counter.startValue)
+    let maxValue = useSelector<AppRootStateType, number> (state => state.counter.maxValue)
+    let valueToIncrement = useSelector<AppRootStateType, number> (state => state.counter.value)
+    const dispatch = useDispatch()
+    //let [startValue, setStartValue] = useState<number>(Number(localStorage.getItem('counterValue')) || 0)
+    //let [maxValue, setMaxValue] = useState<number>(props.maxValue)
+    let [isSetButtonDisabled, setIsSetButtonDisabled] = useState<boolean>(valueToIncrement >= maxValue)
 
     useEffect(() => {
         props.setIsSettingsInvalidCallback(startValue >= maxValue);
         setIsSetButtonDisabled(startValue >= maxValue);
     }, [startValue, maxValue])
 
-    const callSetNewValueCallback = () => {
-        props.setNewValuesCallback(startValue, maxValue)
+    const SetNewValues = () => {
+        dispatch(SetCounterToSettingsAC())
+        dispatch(SetCounterAC(startValue, maxValue))
+        //props.setNewValuesCallback(startValue, maxValue)
+    }
+    const onStart = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch(SetStartAC(e.currentTarget.value))
+    }
+    const onMax = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch(SetMaxAC(e.currentTarget.value))
     }
 
     return <div className={"counter"}>
@@ -27,19 +42,19 @@ export const Settings = (props:SettingsPropsType) => {
             <span>
              <span className={"inputtitle"}>max value: </span>
              <input type={"number"} max={10} min={0} className={"input"} value={maxValue}
-                    onChange={(e) => setMaxValue(parseInt(e.currentTarget.value))}
+                    onChange={onMax}
              />
         </span>
             <span>
              <span className={"inputtitle"}>start value: </span>
             <input type={"number"} max={10} min={0}  className={"input"} value={startValue}
-                   onChange={(e) => setStartValue(parseInt(e.currentTarget.value))}
+                   onChange={onStart}
             />
         </span>
         </div>
 
         <div className={"buttons"}>
-            <Button title={"set"} callBack={callSetNewValueCallback} disabled={isSetButtonDisabled}/>
+            <Button title={"set"} callBack={SetNewValues} disabled={isSetButtonDisabled}/>
         </div>
 
     </div>

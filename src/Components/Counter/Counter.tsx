@@ -2,40 +2,56 @@ import React, {useEffect, useState} from "react";
 import {Button} from "./Button";
 import {Display} from "./Display";
 import '../../App.css'
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "../../Redux/Store";
+import {IncValueAC, ResetCounterAC} from "../../Redux/Reducer";
 
 
 export type CounterPropsType = {
-    valueToIncrement: number
-    maxValue: number
+    /*valueToIncrement: number
+    maxValue: number*/
     isSettingsInvalid: boolean
-    incValue: () => void
-    resetCounter: () => void
+    /*incValue: () => void
+    resetCounter: () => void*/
     counterToSettings: () => void
 }
 
 export const Counter = (props:CounterPropsType) => {
+    let valueToIncrement = useSelector<AppRootStateType, number> (state => state.counter.value)
+    let maxValue = useSelector<AppRootStateType, number> (state => state.counter.maxValue)
+    const dispatch = useDispatch()
     let [isIncButtonDisabled, setIsIncButtonDisabled] = useState<boolean>(false)
 
     useEffect(() => {
-        setIsIncButtonDisabled(props.valueToIncrement >= props.maxValue);
-    }, [props.valueToIncrement, props.maxValue])
+        setIsIncButtonDisabled(valueToIncrement >= maxValue);
+    }, [valueToIncrement, maxValue])
+
+    const incValue = () => {
+        /*let newValueToIncrement = valueToIncrement + 1;*/
+        dispatch(IncValueAC())
+    }
+    const resetCounter = () => {
+        /*setValueToIncrement(parseInt(localStorage.getItem('counterValue') || '0'))*/
+        dispatch(ResetCounterAC())
+    }
+
 
     return <div className="counter">
         <div>
             <Display
-                value={props.valueToIncrement}
+                value={valueToIncrement}
                 isSettingsInvalid={props.isSettingsInvalid}
-                maxValue={props.maxValue}
+                maxValue={maxValue}
             />
         </div>
         <div className={"buttons"}>
             <Button
-                callBack={props.incValue}
+                callBack={incValue}
                 title={"Inc"}
                 disabled={isIncButtonDisabled}
             />
             <Button
-                callBack={props.resetCounter}
+                callBack={resetCounter}
                 title={"Reset"}
             />
             <Button title={"Settings"} callBack={props.counterToSettings}
