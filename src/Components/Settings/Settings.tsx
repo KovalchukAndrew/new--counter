@@ -6,18 +6,13 @@ import {AppRootStateType} from "../../Redux/Store";
 import {SetCounterAC, SetCounterToSettingsAC, SetMaxAC, SetStartAC} from "../../Redux/Reducer";
 
 export type SettingsPropsType = {
-    //maxValue: number
-    //valueToIncrement: number
-    //setNewValuesCallback: (newStartValue: number, newMaxValue: number) => void
     setIsSettingsInvalidCallback: (isSettingsInvalid: boolean) => void
 }
-export const Settings = (props:SettingsPropsType) => {
-    let startValue = useSelector<AppRootStateType, number> (state => state.counter.startValue)
-    let maxValue = useSelector<AppRootStateType, number> (state => state.counter.maxValue)
-    let valueToIncrement = useSelector<AppRootStateType, number> (state => state.counter.value)
+export const Settings = (props: SettingsPropsType) => {
+    let startValue = useSelector<AppRootStateType, number>(state => state.counter.startValue)
+    let maxValue = useSelector<AppRootStateType, number>(state => state.counter.maxValue)
+    let valueToIncrement = useSelector<AppRootStateType, number>(state => state.counter.value)
     const dispatch = useDispatch()
-    //let [startValue, setStartValue] = useState<number>(Number(localStorage.getItem('counterValue')) || 0)
-    //let [maxValue, setMaxValue] = useState<number>(props.maxValue)
     let [isSetButtonDisabled, setIsSetButtonDisabled] = useState<boolean>(valueToIncrement >= maxValue)
 
     useEffect(() => {
@@ -28,7 +23,6 @@ export const Settings = (props:SettingsPropsType) => {
     const SetNewValues = () => {
         dispatch(SetCounterToSettingsAC())
         dispatch(SetCounterAC(startValue, maxValue))
-        //props.setNewValuesCallback(startValue, maxValue)
     }
     const onStart = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch(SetStartAC(e.currentTarget.value))
@@ -47,7 +41,7 @@ export const Settings = (props:SettingsPropsType) => {
         </span>
             <span>
              <span className={"inputtitle"}>start value: </span>
-            <input type={"number"} max={10} min={0}  className={"input"} value={startValue}
+            <input type={"number"} max={10} min={0} className={"input"} value={startValue}
                    onChange={onStart}
             />
         </span>
@@ -58,6 +52,5 @@ export const Settings = (props:SettingsPropsType) => {
         </div>
 
     </div>
-
 
 }
